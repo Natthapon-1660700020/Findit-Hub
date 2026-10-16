@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* นำเข้าฟอนต์ Plus Jakarta Sans สำหรับลุค Modern Web */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@layer base {
+  body {
+    font-family:
+      "Plus Jakarta Sans",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ปรับแต่ง Palette สี DaisyUI ให้ดูพรีเมียม */
+@plugin "daisyui/theme" {
+  name: "findit-theme";
+  default: true;
+  --color-primary: #2563eb; /* Royal Tech Blue */
+  --color-primary-content: #ffffff;
+  --color-secondary: #0f172a; /* Deep Slate Navy */
+  --color-secondary-content: #ffffff;
+  --color-accent: #0284c7; /* Sky Blue */
+  --color-base-100: #ffffff; /* พื้นหลังการ์ด ขาวสะอาด */
+  --color-base-200: #f1f5f9; /* พื้นหลังส่วนตัด / กล่องย่อย */
+  --color-base-300: #e2e8f0; /* สีเส้นขอบ */
+  --color-base-content: #0f172a; /* สีข้อความหลัก */
+}
