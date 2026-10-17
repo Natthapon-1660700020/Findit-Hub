@@ -1,21 +1,27 @@
-import React from 'react';
-import { Outlet } from 'react-router';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-
-export const RootLayout: React.FC = () => {
-  return (
-    <div className="min-h-screen flex flex-col bg-base-200/40 text-base-content antialiased">
-      {/* ส่วนหัวของเว็บพร้อมเมนู NavLink */}
-      <Navbar />
-
-      {/* เนื้อหาหลักของแต่ละหน้าจะถูกเรนเดอร์ผ่าน Outlet */}
-      <main className="flex-1">
-        <Outlet />
-      </main>
-
-      {/* ส่วนท้ายของเว็บ */}
-      <Footer />
-    </div>
-  );
-};
+export function RootLayout() {
+  const {
+    pathname
+  } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const titles: Record<string, string> = {
+      '/': 'Explore',
+      '/saved': 'Saved items',
+      '/report': 'Report an item',
+      '/about': 'About'
+    };
+    document.title = (pathname.startsWith('/items/') ? 'Item details' : titles[pathname] || 'FindIt') + ' | FindIt';
+  }, [pathname]);
+  return <div className="app-shell">
+    <a href="#main-content" className="skip-link">Skip to content</a>
+    <Navbar />
+    <main className="main-content" id="main-content" tabIndex={-1}>
+      <Outlet />
+    </main>
+    <Footer />
+  </div>;
+}

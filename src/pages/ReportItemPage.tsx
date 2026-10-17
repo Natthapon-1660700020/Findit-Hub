@@ -1,81 +1,96 @@
-import React, { useState } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useCreateItem } from '../hooks/useItems';
-import type {
-  ItemType,
-  ItemCategory,
-  CustodyLocation,
-} from '../types/item';
-import {
-  ITEM_CATEGORIES,
-  CAMPUS_LOCATIONS,
-} from '../types/item';
-
-export const ReportItemPage: React.FC = () => {
+import { ITEM_CATEGORIES, CAMPUS_LOCATIONS, CUSTODY_OPTIONS, type ItemType, type ItemCategory, type CustodyLocation } from '../types/item';
+import { Icon } from '../components/Icon';
+const localToday = () => {
+  const now = new Date();
+  return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+};
+export function ReportItemPage() {
   const navigate = useNavigate();
-  const createMutation = useCreateItem();
-
+  const mutation = useCreateItem();
   const [type, setType] = useState<ItemType>('Lost');
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<ItemCategory>('Electronics');
+  const [category, setCategory] = useState<ItemCategory | ''>('');
+  const [location, setLocation] = useState('');
+  const [date, setDate] = useState(localToday);
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState(CAMPUS_LOCATIONS[0]);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [custody, setCustody] = useState<CustodyLocation>('With Finder / Owner');
+  const [custody, setCustody] = useState<CustodyLocation>('Central Lost & Found Room (Building A6 First Floor)');
   const [contact, setContact] = useState('');
-  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // สลับประเภทประกาศ พร้อมตั้งค่าเริ่มต้นของจุดเก็บของให้สอดคล้องกับความเป็นจริง
-  const handleTypeSelect = (selectedType: ItemType) => {
-    setType(selectedType);
-    if (selectedType === 'Lost') {
-      setCustody('With Finder / Owner');
-    } else {
-      setCustody('Central Lost & Found Room (Building A6 First Floor)'); // ตั้งค่าเริ่มต้นสำหรับ Found
-    }
-  };
-
-  // ฟังก์ชันย่อขนาดภาพและแปลงเป็น Base64
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setErrorMessage('Please select a valid image file (PNG, JPG, WEBP).');
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [fileName, setFileName] = useState('');
+  const [error, setError] = useState('');
+  const [imageError, setImageError] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const imageVersion = useRef(0);
+  const errorRef = useRef<HTMLDivElement>(null);
+  function removeImage() {
+    imageVersion.current++;
+    setImageUrl(undefined);
+    setFileName('');
+    setProcessing(false);
+    setImageError('');
+    if (fileInput.current) fileInput.current.value = '';
+  }
+  async function readImage(file: File) {
+    const version = ++imageVersion.current;
+    setImageError('');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setImageError('Please choose a JPG, PNG, or WEBP image.');
+      setProcessing(false);
       return;
     }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        const scale = Math.min(MAX_WIDTH / img.width, 1);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        setImageUrl(canvas.toDataURL('image/jpeg', 0.8));
-      };
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage('');
-
-    if (!title.trim() || !description.trim() || !contact.trim()) {
-      setErrorMessage('Please fill in all required fields (Title, Description, and Contact).');
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError('This image is too large. Please choose a file under 5 MB.');
+      setProcessing(false);
       return;
     }
-
+    setProcessing(true);
     try {
-      await createMutation.mutateAsync({
+      const data = await new Promise<string>((ok, fail) => {
+        const reader = new FileReader();
+        reader.onload = () => ok(reader.result as string);
+        reader.onerror = () => fail(new Error('Read failed'));
+        reader.readAsDataURL(file);
+      });
+      const img = await new Promise<HTMLImageElement>((ok, fail) => {
+        const image = new Image();
+        image.onload = () => ok(image);
+        image.onerror = () => fail(new Error('Invalid image'));
+        image.src = data;
+      });
+      const scale = Math.min(800 / Math.max(img.width, img.height), 1);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Image processing unavailable');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (version === imageVersion.current) {
+        setImageUrl(canvas.toDataURL('image/jpeg', .8));
+        setFileName(file.name);
+      }
+    } catch {
+      if (version === imageVersion.current) setImageError('We could not read this image. Please try another file.');
+    } finally {
+      if (version === imageVersion.current) setProcessing(false);
+    }
+  }
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (!title.trim() || !description.trim() || !contact.trim() || !category || !location) {
+      setError('Please complete all required fields.');
+      return;
+    }
+    if (processing) return;
+    try {
+      await mutation.mutateAsync({
         title: title.trim(),
         type,
         category,
@@ -84,229 +99,157 @@ export const ReportItemPage: React.FC = () => {
         date,
         custody: type === 'Lost' ? 'With Finder / Owner' : custody,
         contact: contact.trim(),
-        imageUrl: imageUrl || undefined,
+        imageUrl
       });
-
-      navigate('/');
+      navigate('/', {
+        state: {
+          reportCreated: true
+        }
+      });
     } catch {
-      setErrorMessage('Failed to submit report. Please verify connection and try again.');
+      setError('We could not publish your report. Please try again.');
+      requestAnimationFrame(() => errorRef.current?.focus());
     }
-  };
-
-  return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <div className="bg-base-100 p-6 sm:p-10 rounded-3xl border border-base-200 shadow-xl">
-        <div className="text-center mb-8">
-          <span className="badge badge-primary font-bold uppercase text-xs mb-2">
-            Custom Feature
-          </span>
-          <h1 className="text-3xl font-extrabold text-base-content">Report an Item</h1>
-          <p className="text-sm text-base-content/70 mt-1">
-            Submit a lost item or publish a found object to help reunite belongings with their owner.
-          </p>
-        </div>
-
-        {errorMessage && (
-          <div className="alert alert-error text-sm mb-6 font-medium">
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 1. Item Type Selector */}
-          <div>
-            <label className="label font-bold text-sm">Report Type *</label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => handleTypeSelect('Lost')}
-                className={`btn py-3 font-bold ${
-                  type === 'Lost' ? 'btn-error text-white' : 'btn-outline'
-                }`}
-              >
-                🔍 I Lost an Item
-              </button>
-              <button
-                type="button"
-                onClick={() => handleTypeSelect('Found')}
-                className={`btn py-3 font-bold ${
-                  type === 'Found' ? 'btn-success text-white' : 'btn-outline'
-                }`}
-              >
-                📦 I Found an Item
-              </button>
-            </div>
-          </div>
-
-          {/* 2. Title */}
-          <div>
-            <label className="label font-bold text-sm">Item Name / Title *</label>
-            <input
-              type="text"
-              required
-              placeholder="e.g., Brown Leather Wallet, AirPods Pro 2"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* 3. Category & Date */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="label font-bold text-sm">Category *</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as ItemCategory)}
-                className="select select-bordered w-full"
-              >
-                {ITEM_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="label font-bold text-sm">
-                {type === 'Lost' ? 'Date Lost *' : 'Date Found *'}
-              </label>
-              <input
-                type="date"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="input input-bordered w-full"
-              />
-            </div>
-          </div>
-
-          {/* 4. Campus Location */}
-          <div>
-            <label className="label font-bold text-sm">
-              {type === 'Lost'
-                ? 'Last Seen Campus Location *'
-                : 'Campus Location Where Found *'}
-            </label>
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="select select-bordered w-full"
-            >
-              {CAMPUS_LOCATIONS.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 5. Custody Location (แยกการแสดงผลตามประเภท Lost / Found) */}
-          {type === 'Found' ? (
-            <div>
-              <label className="label font-bold text-sm">
-                Where did you keep/leave the found item? (Pick-up Point) *
-              </label>
-              <select
-                value={custody}
-                onChange={(e) => setCustody(e.target.value as CustodyLocation)}
-                className="select select-bordered w-full"
-              >
-                <option value="Central Lost & Found Room (Building A6 First Floor)">
-                  Handed over to Central Lost & Found Room (Building A6 First Floor)
-                </option>
-                <option value="Building Reception / Staff Desk">
-                  Left at Building Reception / Staff Desk
-                </option>
-                <option value="With Finder / Owner">
-                  Kept with me (Finder - Contact me directly)
-                </option>
-              </select>
-            </div>
-          ) : (
-            <div className="bg-base-200/70 p-4 rounded-xl border border-base-300 text-xs text-base-content/80 leading-relaxed">
-              💡 <strong>Note for Lost Item:</strong> If someone finds your belonging, they can contact you directly via the contact channel below or drop it off at the <strong>Central Lost & Found Room (Building A6 First Floor)</strong>.
-            </div>
-          )}
-
-          {/* 6. Contact Information */}
-          <div>
-            <label className="label font-bold text-sm">
-              {type === 'Lost'
-                ? 'Owner Contact Channel (So finder can reach you) *'
-                : 'Finder / Office Contact Channel *'}
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g., Line: @student_bu / Phone: 081-xxx-xxxx"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* 7. Description */}
-          <div>
-            <label className="label font-bold text-sm">Detailed Description *</label>
-            <textarea
-              required
-              rows={4}
-              placeholder={
-                type === 'Lost'
-                  ? 'Describe distinctive features, brand, color, or contents to help others identify your item...'
-                  : 'Describe the item you found and any specific instructions for the owner...'
-              }
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="textarea textarea-bordered w-full"
-            />
-          </div>
-
-          {/* 8. Photo Upload (Optional) */}
-          <div className="bg-base-200/50 p-4 rounded-2xl border border-base-200">
-            <label className="label font-bold text-sm">
-              Photo Upload{' '}
-              <span className="font-normal text-xs text-base-content/60">(Optional)</span>
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageFileChange}
-              className="file-input file-input-bordered file-input-sm w-full"
-            />
-            {imageUrl && (
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="h-16 w-16 object-cover rounded-lg border"
-                />
-                <button
-                  type="button"
-                  onClick={() => setImageUrl(undefined)}
-                  className="btn btn-xs btn-error btn-outline"
-                >
-                  Remove Photo
-                </button>
-              </div>
-            )}
-            <p className="text-xs text-base-content/60 mt-2">
-              If no photo is uploaded, FindIt will automatically display an icon corresponding to the chosen category.
-            </p>
-          </div>
-
-          {/* 9. Submit Button */}
-          <button
-            type="submit"
-            disabled={createMutation.isPending}
-            className="btn btn-primary w-full text-base font-bold shadow-md"
-          >
-            {createMutation.isPending ? 'Submitting Report...' : 'Submit Report'}
-          </button>
-        </form>
+  }
+  const busy = mutation.isPending || processing;
+  return <div className="page report-page">
+    <div className="page-heading">
+      <div>
+        <span className="eyebrow">Make someone’s day</span>
+        <h1>Report an item</h1>
       </div>
     </div>
-  );
-};
+    <form className="form-panel" onSubmit={submit}>
+      <div className="report-type" role="group" aria-label="Report type">
+        {(['Lost', 'Found'] as const).map(t => <button type="button" key={t} className={type === t ? 'selected' : ''} aria-pressed={type === t} onClick={() => setType(t)} disabled={mutation.isPending}><span className={'status-dot dot-' + t.toLowerCase()} />{t} item</button>)}
+      </div>
+      {error && <div className="error-alert" ref={errorRef} tabIndex={-1} role="alert">
+        <Icon name="info" size={17} />
+        {error}
+      </div>}
+      <div className="form-grid">
+        <div className="field">
+          <label htmlFor="item-name">Item name <span className="required">*</span></label>
+          <div className="input-wrap">
+            <Icon name="tag" size={18} />
+            <input id="item-name" required maxLength={120} placeholder="e.g. Brown leather wallet" value={title} onChange={e => setTitle(e.target.value)} />
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="category">Category <span className="required">*</span></label>
+          <div className="input-wrap">
+            <Icon name="grid" size={17} />
+            <select id="category" required value={category} onChange={e => setCategory(e.target.value as ItemCategory)}>
+              <option value="" disabled>Select a category</option>
+              {ITEM_CATEGORIES.map(c => <option key={c}>
+                {c}
+              </option>)}
+            </select>
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="location">
+            {type === 'Lost' ? 'Last seen location' : 'Found location'}
+            <span className="required">*</span>
+          </label>
+          <div className="input-wrap">
+            <Icon name="pin" size={18} />
+            <select id="location" required value={location} onChange={e => setLocation(e.target.value)}>
+              <option value="" disabled>Select a campus location</option>
+              {CAMPUS_LOCATIONS.map(l => <option key={l}>
+                {l}
+              </option>)}
+            </select>
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="date">Date {type === 'Lost' ? 'lost' : 'found'} <span className="required">*</span></label>
+          <div className="input-wrap">
+            <Icon name="calendar" size={18} />
+            <input id="date" type="date" required max={localToday()} value={date} onChange={e => setDate(e.target.value)} />
+          </div>
+        </div>
+        <div className="field full">
+          <label htmlFor="description">Description <span className="required">*</span></label>
+          <textarea id="description" required maxLength={3000} placeholder={type === 'Lost' ? 'Describe the item, any distinctive details, and where you last saw it…' : 'Describe what you found, its distinctive details, and where you found it…'} value={description} onChange={e => setDescription(e.target.value)} rows={4} />
+        </div>
+        {type === 'Found' && <div className="field full">
+          <label htmlFor="custody">Pick-up point <span className="required">*</span></label>
+          <div className="input-wrap">
+            <Icon name="building" size={18} />
+            <select id="custody" value={custody} onChange={e => setCustody(e.target.value as CustodyLocation)}>
+              {CUSTODY_OPTIONS.map(c => <option key={c} value={c}>
+                {c === 'With Finder / Owner' ? 'Kept with me — contact the finder' : c}
+              </option>)}
+            </select>
+          </div>
+          <p className="field-help">Let the owner know where their item is being kept.</p>
+        </div>}
+        <div className="field full">
+          <label htmlFor="contact">
+            {type === 'Lost' ? 'Owner contact' : 'Finder / office contact'}
+            <span className="required">*</span>
+          </label>
+          <div className="input-wrap">
+            <Icon name="phone" size={17} />
+            <input id="contact" required maxLength={250} placeholder="e.g. Line: @yourname or Phone: 081-xxx-xxxx" value={contact} onChange={e => setContact(e.target.value)} aria-describedby="contact-help" />
+          </div>
+
+        </div>
+        {type === 'Lost' && <div className="form-note field full">
+          <Icon name="info" size={16} />
+          <p>A finder can contact you directly or hand in your item at Central Lost &amp; Found, Building A6 (first floor).</p>
+        </div>}
+        <div className="field full">
+          <label htmlFor="photo">Item photo <span className="optional">(optional)</span></label>
+          <div className={'upload-area' + (dragging ? ' dragging' : '')} onDragOver={e => {
+            e.preventDefault();
+            setDragging(true);
+          }} onDragLeave={() => setDragging(false)} onDrop={e => {
+            e.preventDefault();
+            setDragging(false);
+            const file = e.dataTransfer.files[0];
+            if (file && !mutation.isPending) void readImage(file);
+          }}>
+            <div className="upload-icon">
+              <Icon name="image" size={29} />
+            </div>
+            <div>
+              <strong>
+                {processing ? 'Preparing your image…' : 'Click to upload or drag and drop'}
+              </strong>
+              <p>JPG, PNG, or WEBP · Up to 5 MB</p>
+            </div>
+            <input ref={fileInput} id="photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={mutation.isPending} aria-describedby="photo-help" onChange={e => {
+              const file = e.target.files?.[0];
+              if (file) void readImage(file);
+            }} />
+          </div>
+          {imageError && <p className="error-alert" role="alert">
+            {imageError}
+          </p>}
+          {imageUrl && <div className="upload-preview">
+            <img src={imageUrl} alt="Your item photo preview" />
+            <div>
+              <strong>
+                {fileName}
+              </strong>
+              <p>Ready to add to your report</p>
+            </div>
+            <button type="button" className="icon-button" onClick={removeImage} aria-label="Remove photo" disabled={mutation.isPending}>
+              <Icon name="trash" size={18} />
+            </button>
+          </div>}
+
+        </div>
+      </div>
+      <div className="form-submit">
+        <button className="button button-primary button-full" type="submit" disabled={busy}>
+          <Icon name="send" size={18} />
+          {mutation.isPending ? 'Publishing your report…' : processing ? 'Preparing image…' : 'Submit report'}
+        </button>
+        <p className="form-footnote"><Icon name="info" size={12} />Please share accurate details to help others identify the item.</p>
+      </div>
+    </form>
+  </div>;
+}
