@@ -9,7 +9,7 @@ const TEAM_MEMBERS: TeamMember[] = [{
   studentId: '1660700020',
   role: 'Architect & State Management',
   responsibilities: ['Client-side routing with React Router', 'Dynamic Route for Item Details Page', 'Saved Items Collection Page', 'Zustand Store with Persist Middleware (LocalStorage)'],
-  avatarUrl: 'https://media.discordapp.net/attachments/1412324425507799091/1560890129168736317/IMG_1928.jpg?ex=6ad45bb6&is=6ad30a36&hm=5144a5323d86ecb16589d5f2ac856844a0fedba5d7c54a18efe66450066c8e65&=&format=webp&width=768&height=1024'
+  avatarUrl: '/picture/First.webp'
 }, {
   id: '2',
   fullNameTh: 'นายกฤษภา อินทร์เปื่อย',
@@ -18,7 +18,7 @@ const TEAM_MEMBERS: TeamMember[] = [{
   studentId: '1660701507',
   role: 'UI/UX Designer & Frontend Engineer',
   responsibilities: ['UI/UX Design System with Tailwind CSS & DaisyUI', 'Explore Items Page (Search, Filters, Layout)', 'Responsive Design across Mobile, Tablet, and Desktop', 'Category Icon System & Empty States'],
-  avatarUrl: 'https://media.discordapp.net/attachments/1412324425507799091/1560726184541552740/Aon.webp?ex=6ad3c307&is=6ad27187&hm=9b77468cc8644e8904d07eb88d8a6e9dcb6e7bfa5ffd00dbe1b05fee27868d92&=&format=webp'
+  avatarUrl: '/picture/Aon.webp'
 }, {
   id: '3',
   fullNameTh: 'นายชิษณุพงศ์ อินลิน',
@@ -27,7 +27,7 @@ const TEAM_MEMBERS: TeamMember[] = [{
   studentId: '1660707629',
   role: 'Server State & Custom Page Engineer',
   responsibilities: ['Mock REST API Data Design (25+ Items in db.json)', 'TanStack Query v5 Server State & Cache Configuration', 'Custom Extended Page: Report Item Form Validation', 'Resolve Item Mutation & Deployment Pipeline'],
-  avatarUrl: 'https://media.discordapp.net/attachments/1412324425507799091/1560726190346600568/que.webp?ex=6ad3c308&is=6ad27188&hm=00f32169dce95b882237f6db460ea4f7108d234fdf2afd6a7a8aadf97a57e6c8&=&format=webp'
+  avatarUrl: '/picture/que.webp'
 }];
 function TeamAvatar({
   member
