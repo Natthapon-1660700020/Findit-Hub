@@ -31,7 +31,7 @@ If the API is unavailable, the app falls back to the 25 sample items and stores 
 
 ## Design
 
-The five pages share a light theme, indigo accents, white cards, a cube logo, and outline icons. All interface copy is English. The interface is sized at 125% using a shared root font size and rem-based typography, icons, controls, and spacing. Explore uses four columns on wide screens, three on tablets, two on smaller screens, and one on narrow phones. Responsive breakpoints account for the enlarged interface. The report form and item details stack on narrow screens. Missing or unavailable images use category illustrations; unavailable team portraits use initials.
+The five pages share a white, blue, and sky-blue theme, softly rounded white cards, a blue cube logo, and outline icons. Shared radius tokens keep cards, images, panels, and form controls consistent across desktop and mobile. All interface copy is English. The interface is sized at 125% using a shared root font size and rem-based typography, icons, controls, and spacing. Explore uses four columns on wide screens, three on tablets, two on smaller screens, and one on narrow phones. Responsive breakpoints account for the enlarged interface. The report form and item details stack on narrow screens. Missing or unavailable images use category illustrations; unavailable team portraits use initials.
 
 Typography is enlarged independently of the layout: content and control text is 25% larger, headings are 10% larger, and captions have a 14-pixel minimum at the default font settings. Long card titles, labels, and footer actions wrap to accommodate the larger text.
 

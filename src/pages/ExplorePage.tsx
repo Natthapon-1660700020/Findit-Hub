@@ -103,6 +103,7 @@ export function ExplorePage() {
         {isLoading ? 'Finding your next reunion…' : <>
           <strong>
             {filtered.length}
+            {' '}
             {filtered.length === 1 ? 'item' : 'items'}
           </strong>
           {hasFilters ? ' matching your search' : ' around campus'}

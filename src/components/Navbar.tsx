@@ -33,16 +33,16 @@ export function Navbar() {
         <svg className="brand-logo" viewBox="0 0 48 54" aria-hidden="true">
           <defs>
             <linearGradient id="cube-top" x2="1" y2="1">
-              <stop stopColor="#979bff" />
-              <stop offset="1" stopColor="#646cff" />
+              <stop stopColor="#7dd3fc" />
+              <stop offset="1" stopColor="#3b82f6" />
             </linearGradient>
             <linearGradient id="cube-left" x2="1" y2="1">
-              <stop stopColor="#b5d7ff" />
-              <stop offset="1" stopColor="#7ba2ff" />
+              <stop stopColor="#bae6fd" />
+              <stop offset="1" stopColor="#64b5f6" />
             </linearGradient>
             <linearGradient id="cube-right" x2="1" y2="1">
-              <stop stopColor="#858cff" />
-              <stop offset="1" stopColor="#545cff" />
+              <stop stopColor="#3b9cf5" />
+              <stop offset="1" stopColor="#1768ea" />
             </linearGradient>
           </defs>
           <path d="M24 2 46 14 24 27 2 14Z" fill="url(#cube-top)" />

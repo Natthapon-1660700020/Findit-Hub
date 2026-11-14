@@ -7,15 +7,22 @@
   font-size: 125%;
   font-family: 'DM Sans',sans-serif;
   color: var(--text);
-  background: #f5f7fc;
+  background: #f3f9ff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   color-scheme: light;
-  --primary: #545cff;
+  --primary: #1768ea;
   --muted: var(--text);
-  --border: #e5e8f2;
+  --border: #dceaf5;
   --text: #111111;
+  --primary-hover: #1154c8;
+  --primary-soft: #eaf5ff;
+  --sky: #38bdf8;
+  --radius-card: 1.7rem;
+  --radius-image: 1.1rem;
+  --radius-panel: 2rem;
+  --radius-control: .95rem;
 }
 
 * {
@@ -90,12 +97,12 @@ svg {
 }
 
 :focus-visible {
-  outline: 0.1875rem solid #797fff;
+  outline: 0.1875rem solid #38bdf8;
   outline-offset: 0.25rem;
 }
 
 ::selection {
-  background: #dfe1ff;
+  background: #dcefff;
 }
 
 .skip-link {
@@ -149,7 +156,7 @@ svg {
 .brand-logo {
   width: 2.8125rem;
   height: 3.1875rem;
-  filter: drop-shadow(0 0.25rem 0.375rem #545cff24);
+  filter: drop-shadow(0 0.25rem 0.375rem #1768ea24);
 }
 
 .brand-name {
@@ -161,7 +168,7 @@ svg {
 }
 
 .brand-name span {
-  color: var(--text);
+  color: #124c95;
 }
 
 .brand-tagline {
@@ -185,19 +192,19 @@ svg {
   color: var(--text);
   font-size: 1.09375rem;
   font-weight: 600;
-  border-radius: 0.75rem;
+  border-radius: 1.1rem;
   border: 0.0625rem solid transparent;
 }
 
 .nav-link:hover {
-  background: #f6f6ff;
+  background: #f0f8ff;
   color: var(--primary);
 }
 
 .nav-link.active {
   color: var(--primary);
-  background: #edeeff;
-  border-color: #dedfff;
+  background: #e8f3ff;
+  border-color: #c8e1ff;
 }
 
 .nav-count {
@@ -277,9 +284,9 @@ svg {
 
 .search-form {
   background: #fff;
-  border: 0.0625rem solid #dfe3f1;
-  border-radius: 0.9375rem;
-  box-shadow: 0 0.1875rem 0.9375rem #32377c04;
+  border: 0.0625rem solid #d7e7f5;
+  border-radius: var(--radius-control);
+  box-shadow: 0 0.1875rem 0.9375rem #1768ea04;
   display: flex;
   align-items: center;
   padding: 0.4375rem 0.5rem 0.4375rem 1.375rem;
@@ -287,7 +294,7 @@ svg {
 }
 
 .search-form>svg {
-  color: #8e96af;
+  color: #6b98bf;
 }
 
 .search-input {
@@ -310,7 +317,7 @@ svg {
   align-items: center;
   justify-content: center;
   gap: 0.5625rem;
-  border-radius: 0.6875rem;
+  border-radius: var(--radius-control);
   min-height: 2.75rem;
   padding: 0.6875rem 1.25rem;
   font-size: 1.015625rem;
@@ -319,14 +326,14 @@ svg {
 }
 
 .button-primary {
-  background: var(--primary);
+  background: linear-gradient(120deg, var(--primary), #096bd3);
   color: #fff;
-  box-shadow: 0 0.25rem 0.625rem #545cff20;
+  box-shadow: 0 0.25rem 0.625rem #1768ea20;
 }
 
 .button-primary:hover {
-  background: #434be8;
-  box-shadow: 0 0.3125rem 0.875rem #545cff35;
+  background: linear-gradient(120deg, var(--primary-hover), #075cb8);
+  box-shadow: 0 0.3125rem 0.875rem #1768ea35;
   transform: translateY(-0.0625rem);
 }
 
@@ -336,12 +343,12 @@ svg {
 
 .button-secondary {
   color: var(--primary);
-  background: #eff0ff;
-  border: 0.0625rem solid #e0e2ff;
+  background: #edf6ff;
+  border: 0.0625rem solid #cde4fb;
 }
 
 .button-secondary:hover {
-  background: #e3e5ff;
+  background: #dceeff;
 }
 
 .button-ghost {
@@ -350,7 +357,7 @@ svg {
 }
 
 .button-ghost:hover {
-  background: #edeff7;
+  background: #eaf4fd;
   color: var(--text);
 }
 
@@ -392,7 +399,7 @@ svg {
   background: #fff;
   border: 0.0625rem solid var(--border);
   color: var(--text);
-  border-radius: 0.5625rem;
+  border-radius: var(--radius-control);
   min-height: 2.375rem;
   padding: 0.5rem 1.1875rem;
   font-size: 0.9375rem;
@@ -400,7 +407,7 @@ svg {
 }
 
 .filter-pill:hover {
-  border-color: #bfc2ff;
+  border-color: #8ec8ff;
   color: var(--primary);
 }
 
@@ -408,7 +415,7 @@ svg {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
-  box-shadow: 0 0.1875rem 0.4375rem #545cff20;
+  box-shadow: 0 0.1875rem 0.4375rem #1768ea20;
 }
 
 .status-dot {
@@ -437,7 +444,7 @@ svg {
   position: relative;
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 0.5625rem;
+  border-radius: var(--radius-control);
   padding: 0 0.6875rem;
   color: var(--text);
 }
@@ -521,9 +528,9 @@ svg {
   position: relative;
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card);
   padding: 0.6875rem;
-  box-shadow: 0 0.1875rem 0.625rem #23316403;
+  box-shadow: 0 .3rem 1.3rem #1768ea0a;
   transition: box-shadow .2s,transform .2s,border-color .2s;
   min-width: 0;
   display: flex;
@@ -532,8 +539,8 @@ svg {
 
 .item-card:hover {
   transform: translateY(-0.25rem);
-  box-shadow: 0 0.8125rem 1.75rem #3237750d;
-  border-color: #cdd0ee;
+  box-shadow: 0 .8rem 2rem #1768ea16;
+  border-color: #b8dbf8;
 }
 
 .item-photo-link {
@@ -544,8 +551,8 @@ svg {
 .item-media {
   aspect-ratio: 1.53;
   overflow: hidden;
-  border-radius: 0.75rem;
-  background: #f0f1fa;
+  border-radius: var(--radius-image);
+  background: #edf7ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -571,7 +578,7 @@ svg {
   width: 100%;
   height: 100%;
   color: var(--text);
-  background: radial-gradient(ellipse at 50% 30%,#fcfcff,#eceef9);
+  background: radial-gradient(ellipse at 50% 30%,#ffffff,#e8f4ff);
   font-size: 0.859375rem;
 }
 
@@ -581,8 +588,8 @@ svg {
   display: grid;
   place-items: center;
   border-radius: 1.375rem;
-  color: #8085df;
-  background: #e4e7fb;
+  color: #3d92db;
+  background: linear-gradient(145deg, #e4f5ff, #d5ebff);
 }
 
 .category-icon svg {
@@ -606,7 +613,7 @@ svg {
   padding: 0.3125rem 0.625rem;
   font-size: 0.78125rem;
   font-weight: 700;
-  border-radius: 0.4375rem;
+  border-radius: 999px;
   line-height: 1.25;
 }
 
@@ -622,7 +629,7 @@ svg {
 
 .status-badge.resolved {
   color: var(--text);
-  background: #eef0f8;
+  background: #edf5fb;
 }
 
 .bookmark-button {
@@ -630,9 +637,9 @@ svg {
   place-items: center;
   width: 2.125rem;
   height: 2.125rem;
-  border-radius: 0.5625rem;
+  border-radius: .8rem;
   background: #ffffffed;
-  color: #636b83;
+  color: #496c8b;
   border: 0.0625rem solid #ffffffa8;
   box-shadow: 0 0.125rem 0.4375rem #1a25401a;
 }
@@ -652,7 +659,7 @@ svg {
 
 .bookmark-button.is-saved {
   color: var(--primary);
-  background: #ededff;
+  background: #e7f3ff;
 }
 
 .bookmark-button.is-saved svg {
@@ -701,7 +708,7 @@ svg {
 }
 
 .item-meta svg {
-  color: #949bb2;
+  color: #7aa3c5;
   margin-top: 0.0625rem;
 }
 
@@ -709,7 +716,7 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 0.0625rem solid #f0f1f7;
+  border-top: 0.0625rem solid #e6f0f8;
   margin-top: auto;
   padding-top: 0.625rem;
   color: var(--text);
@@ -757,8 +764,8 @@ svg {
 
 .empty-state {
   background: #fff;
-  border: 0.0625rem dashed #d9dded;
-  border-radius: 1.25rem;
+  border: 0.0625rem dashed #c8deef;
+  border-radius: var(--radius-card);
   padding: 4.0625rem 1.5rem;
   text-align: center;
   display: flex;
@@ -770,7 +777,7 @@ svg {
 .empty-icon {
   height: 4.125rem;
   width: 4.125rem;
-  background: #f0f1ff;
+  background: #e9f5ff;
   color: var(--primary);
   border-radius: 1.25rem;
   display: grid;
@@ -834,7 +841,7 @@ svg {
 }
 
 .skeleton {
-  background: linear-gradient(90deg,#eff1f8,#f9faff,#eff1f8);
+  background: linear-gradient(90deg,#e9f3fb,#fbfdff,#e9f3fb);
   background-size: 200% 100%;
   animation: shimmer 1.6s infinite;
   border-radius: 0.4375rem;
@@ -884,7 +891,7 @@ svg {
 .footer-dot {
   width: 0.3125rem;
   height: 0.3125rem;
-  background: #969cfa;
+  background: #38bdf8;
   border-radius: 50%;
 }
 
@@ -905,12 +912,12 @@ svg {
 .detail-panel {
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 1.5rem;
+  border-radius: var(--radius-panel);
   padding: 1.5625rem;
   display: grid;
   grid-template-columns: 1.05fr 1fr;
   gap: 2.3125rem;
-  box-shadow: 0 0.3125rem 1.75rem #34397504;
+  box-shadow: 0 0.3125rem 1.75rem #1768ea04;
 }
 
 .detail-photo {
@@ -922,7 +929,7 @@ svg {
   aspect-ratio: auto;
   min-height: 33.125rem;
   height: 100%;
-  border-radius: 1rem;
+  border-radius: var(--radius-image);
 }
 
 .detail-photo .category-placeholder {
@@ -974,8 +981,8 @@ svg {
   flex-shrink: 0;
   width: 2.75rem;
   height: 2.75rem;
-  background: #f3f3ff;
-  border-color: #e7e8ff;
+  background: #ecf6ff;
+  border-color: #d5eaff;
   color: var(--primary);
 }
 
@@ -1010,7 +1017,7 @@ svg {
 
 .detail-fact dt svg {
   margin-top: 0.1875rem;
-  color: #8c91b9;
+  color: #6a9fc8;
 }
 
 .detail-fact dd {
@@ -1021,9 +1028,9 @@ svg {
 }
 
 .contact-panel {
-  background: #f5f6ff;
-  border: 0.0625rem solid #e6e8ff;
-  border-radius: 0.75rem;
+  background: #f1f8ff;
+  border: 0.0625rem solid #d1e7fb;
+  border-radius: 1.2rem;
   padding: 1rem;
   margin: 1.5rem 0;
 }
@@ -1057,7 +1064,7 @@ svg {
 .resolution-panel {
   background: #ebf8f1;
   border: 0.0625rem solid #d3ecdf;
-  border-radius: 0.75rem;
+  border-radius: 1.2rem;
   padding: 0.9375rem;
   color: #277650;
   font-size: 0.9375rem;
@@ -1074,7 +1081,7 @@ svg {
 
 .resolve-dialog {
   border: 0.0625rem solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: 1.65rem;
   box-shadow: 0 1.875rem 6.25rem #20264130;
   width: min(30.625rem,calc(100% - 2rem));
   padding: 1.75rem;
@@ -1119,17 +1126,17 @@ svg {
 .form-panel {
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 1.375rem;
+  border-radius: var(--radius-panel);
   padding: 1.875rem;
-  box-shadow: 0 0.3125rem 1.5625rem #30397004;
+  box-shadow: 0 0.3125rem 1.5625rem #1768ea04;
 }
 
 .report-type {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #f5f6fb;
-  border: 0.0625rem solid #eaecf5;
-  border-radius: 0.75rem;
+  background: #f2f8fd;
+  border: 0.0625rem solid #e0edf7;
+  border-radius: 1.2rem;
   padding: 0.3125rem;
   margin-bottom: 1.875rem;
   gap: 0.3125rem;
@@ -1144,7 +1151,7 @@ svg {
   font-size: 1.015625rem;
   font-weight: 600;
   color: var(--text);
-  border-radius: 0.5rem;
+  border-radius: .9rem;
   background: transparent;
   border: 0.0625rem solid transparent;
 }
@@ -1152,8 +1159,8 @@ svg {
 .report-type button.selected {
   background: #fff;
   color: var(--text);
-  border-color: #dedfff;
-  box-shadow: 0 0.125rem 0.5rem #363b7508;
+  border-color: #c8e1ff;
+  box-shadow: 0 0.125rem 0.5rem #1768ea08;
 }
 
 .report-type .status-dot {
@@ -1211,14 +1218,14 @@ svg {
 .input-wrap>svg {
   position: absolute;
   left: 0.875rem;
-  color: #9ba2ba;
+  color: #80a6c5;
   pointer-events: none;
 }
 
 .field input:not([type=file]),.field textarea,.field select {
-  background: #fafbfe;
-  border: 0.0625rem solid #e0e4f0;
-  border-radius: 0.625rem;
+  background: #fafdff;
+  border: 0.0625rem solid #d6e6f3;
+  border-radius: var(--radius-control);
   min-height: 2.875rem;
   padding: 0.75rem 0.875rem;
   color: var(--text);
@@ -1244,8 +1251,8 @@ svg {
 
 .field input:focus,.field select:focus,.field textarea:focus {
   outline: none;
-  border-color: #8187ff;
-  box-shadow: 0 0 0 0.1875rem #545cff0c;
+  border-color: #53a8f6;
+  box-shadow: 0 0 0 0.1875rem #1768ea0c;
   background: #fff;
 }
 
@@ -1261,8 +1268,8 @@ svg {
 
 .form-note {
   padding: 0.75rem 0.9375rem;
-  background: #f6f7fd;
-  border-radius: 0.625rem;
+  background: #eef7ff;
+  border-radius: 1.2rem;
   display: flex;
   gap: 0.5625rem;
   color: var(--text);
@@ -1271,15 +1278,15 @@ svg {
 }
 
 .form-note svg {
-  color: #9298c9;
+  color: #71a8d3;
   margin-top: 0.0625rem;
 }
 
 .upload-area {
-  border: 0.09375rem dashed #d3d7ed;
-  border-radius: 0.75rem;
+  border: 0.09375rem dashed #bfdcf2;
+  border-radius: 1.2rem;
   min-height: 8.5625rem;
-  background: #fafbff;
+  background: #f8fcff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1290,7 +1297,7 @@ svg {
 }
 
 .upload-area:hover,.upload-area.dragging {
-  background: #f0f1ff;
+  background: #e9f5ff;
   border-color: var(--primary);
 }
 
@@ -1304,15 +1311,15 @@ svg {
 }
 
 .upload-area:focus-within {
-  outline: 0.1875rem solid #797fff;
+  outline: 0.1875rem solid #38bdf8;
   outline-offset: 0.1875rem;
 }
 
 .upload-icon {
   display: grid;
   place-items: center;
-  background: #edeeff;
-  color: #8187e6;
+  background: #e8f3ff;
+  color: #428ed3;
   border-radius: 0.8125rem;
   width: 3.25rem;
   height: 3.25rem;
@@ -1321,7 +1328,7 @@ svg {
 .upload-area strong {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #6870bc;
+  color: #185cb3;
   display: block;
 }
 
@@ -1335,9 +1342,9 @@ svg {
   display: flex;
   align-items: center;
   gap: 0.8125rem;
-  background: #f6f7fe;
+  background: #f2f9ff;
   border: 0.0625rem solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: 1.2rem;
   padding: 0.75rem;
 }
 
@@ -1389,9 +1396,9 @@ svg {
   align-items: center;
   gap: 2.125rem;
   padding: 2.5rem;
-  background: linear-gradient(110deg,#fff,#f0f1ff);
-  border: 0.0625rem solid #e0e3f6;
-  border-radius: 1.375rem;
+  background: linear-gradient(110deg,#fff,#e9f5ff);
+  border: 0.0625rem solid #d2e8fa;
+  border-radius: var(--radius-panel);
   margin-bottom: 2.5rem;
 }
 
@@ -1399,11 +1406,11 @@ svg {
   width: 5.9375rem;
   height: 5.9375rem;
   border-radius: 1.5rem;
-  background: var(--primary);
+  background: linear-gradient(135deg, #1b75ec, #1483d8);
   color: #fff;
   display: grid;
   place-items: center;
-  box-shadow: 0 0.5625rem 1.25rem #545cff24;
+  box-shadow: 0 0.5625rem 1.25rem #1768ea24;
   flex-shrink: 0;
 }
 
@@ -1446,8 +1453,9 @@ svg {
   padding: 1.875rem 1.4375rem 1.5rem;
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card);
   text-align: center;
+  box-shadow: 0 .3rem 1.3rem #1768ea08;
 }
 
 .team-avatar {
@@ -1455,7 +1463,7 @@ svg {
   height: 6.25rem;
   border-radius: 50%;
   margin: 0 auto 1.125rem;
-  background: #edefff;
+  background: #e8f5ff;
   display: grid;
   place-items: center;
   color: var(--primary);
@@ -1463,7 +1471,7 @@ svg {
   font-weight: 750;
   font-size: 1.925rem;
   overflow: hidden;
-  box-shadow: 0 0 0 0.375rem #f8f9fe;
+  box-shadow: 0 0 0 0.375rem #f4faff;
 }
 
 .team-avatar img {
@@ -1473,13 +1481,13 @@ svg {
 }
 
 .team-card:nth-child(2) .team-avatar {
-  background: #fff0e9;
-  color: #cd8a5f;
+  background: #e5f4ff;
+  color: #2674ac;
 }
 
 .team-card:nth-child(3) .team-avatar {
-  background: #e9f4f6;
-  color: #5f9da9;
+  background: #e6f6ff;
+  color: #1e79ad;
 }
 
 .team-card h3 {
@@ -1509,7 +1517,7 @@ svg {
   padding: 1.0625rem 0 0;
   list-style: none;
   text-align: left;
-  border-top: 0.0625rem solid #f0f1f7;
+  border-top: 0.0625rem solid #e6f0f8;
   font-size: 0.859375rem;
   color: var(--text);
   line-height: 1.8;
@@ -1526,7 +1534,7 @@ svg {
 
 .team-responsibilities svg {
   margin-top: 0.1875rem;
-  color: #aaaee4;
+  color: #80b7df;
 }
 
 .attribution {
@@ -1537,7 +1545,7 @@ svg {
   gap: 1.25rem;
   background: #fff;
   border: 0.0625rem solid var(--border);
-  border-radius: 1.125rem;
+  border-radius: 1.65rem;
 }
 
 .attribution>svg {
@@ -1613,6 +1621,7 @@ svg {
   }
   .team-card {
     padding: 1.5625rem 1.125rem;
+    box-shadow: 0 .3rem 1.3rem #1768ea08;
   }
   .team-card h3 {
     font-size: 1.1rem;
@@ -1670,6 +1679,7 @@ svg {
   }
   .team-card {
     padding: 1.5625rem 0.9375rem;
+    box-shadow: 0 .3rem 1.3rem #1768ea08;
   }
   .team-card h3 {
     font-size: 0.9625rem;
@@ -1731,7 +1741,7 @@ svg {
   }
   .nav-link {
     padding: 0.5625rem 0.625rem;
-    border-radius: 0.5625rem;
+    border-radius: 1.1rem;
     font-size: 0.859375rem;
     flex: 1;
     gap: 0.3125rem;
@@ -1781,7 +1791,7 @@ svg {
   .search-form {
     padding: 0.375rem 0.375rem 0.375rem 0.8125rem;
     gap: 0.5625rem;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-control);
   }
   .search-form>svg {
     width: 1.1875rem;
@@ -1828,11 +1838,11 @@ svg {
     gap: 0.8125rem;
   }
   .item-card {
-    border-radius: 0.9375rem;
+    border-radius: var(--radius-card);
     padding: 0.4375rem;
   }
   .item-media {
-    border-radius: 0.5625rem;
+    border-radius: var(--radius-image);
     aspect-ratio: 1.15;
   }
   .item-title {
@@ -1874,7 +1884,7 @@ svg {
   .status-badge {
     font-size: 0.7rem;
     padding: 0.25rem 0.375rem;
-    border-radius: 0.3125rem;
+    border-radius: 999px;
     gap: 0.25rem;
   }
   .status-badge svg {
@@ -1940,10 +1950,10 @@ svg {
   .detail-panel {
     padding: 0.75rem;
     gap: 1.125rem;
-    border-radius: 1.125rem;
+    border-radius: var(--radius-panel);
   }
   .detail-photo .item-media {
-    border-radius: 0.75rem;
+    border-radius: var(--radius-image);
     aspect-ratio: 1.1;
   }
   .detail-photo .category-placeholder {
@@ -1997,7 +2007,7 @@ svg {
   }
   .form-panel {
     padding: 1.125rem;
-    border-radius: 1.0625rem;
+    border-radius: var(--radius-panel);
   }
   .report-type {
     margin-bottom: 1.5rem;
@@ -2066,6 +2076,7 @@ svg {
   }
   .team-card {
     padding: 1.75rem;
+    box-shadow: 0 .3rem 1.3rem #1768ea08;
   }
   .team-card h3 {
     font-size: 1.30625rem;
@@ -2269,5 +2280,15 @@ svg {
   }
   .detail-fact dd {
     padding-left: 1.4375rem;
+  }
+}
+
+/* Rounder surfaces share one radius scale across all five pages. */
+
+@media(max-width:775px) {
+  :root {
+    --radius-card: 1.35rem;
+    --radius-image: .9rem;
+    --radius-panel: 1.5rem;
   }
 }
